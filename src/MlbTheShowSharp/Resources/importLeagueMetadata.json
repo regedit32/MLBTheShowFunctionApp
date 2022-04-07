@@ -1,0 +1,212 @@
+[
+  {
+    "id": "1",
+    "TeamShortName": "ARI",
+    "Team": "Arizona Diamondbacks",
+    "Division": "West",
+    "League": "NL"
+  },
+  {
+    "id": "2",
+    "TeamShortName": "ATL",
+    "Team": "Atlanta Braves",
+    "Division": "East",
+    "League": "NL"
+  },
+  {
+    "id": "3",
+    "TeamShortName": "BAL",
+    "Team": "Baltimore Orioles",
+    "Division": "East",
+    "League": "AL"
+  },
+  {
+    "id": "4",
+    "TeamShortName": "BOS",
+    "Team": "Boston Red Sox",
+    "Division": "East",
+    "League": "AL"
+  },
+  {
+    "id": "5",
+    "TeamShortName": "CHC",
+    "Team": "Chicago Cubs",
+    "Division": "Central",
+    "League": "NL"
+  },
+  {
+    "id": "6",
+    "TeamShortName": "CIN",
+    "Team": "Chicago White Sox",
+    "Division": "Central",
+    "League": "AL"
+  },
+  {
+    "id": "7",
+    "TeamShortName": "CLE",
+    "Team": "Cincinnati Reds",
+    "Division": "Central",
+    "League": "NL"
+  },
+  {
+    "id": "8",
+    "TeamShortName": "COL",
+    "Team": "Cleveland Indians",
+    "Division": "Central",
+    "League": "AL"
+  },
+  {
+    "id": "9",
+    "TeamShortName": "CWS",
+    "Team": "Colorado Rockies",
+    "Division": "West",
+    "League": "NL"
+  },
+  {
+    "id": "10",
+    "TeamShortName": "DET",
+    "Team": "Detroit Tigers",
+    "Division": "Central",
+    "League": "AL"
+  },
+  {
+    "id": "11",
+    "TeamShortName": "HOU",
+    "Team": "Houston Astros",
+    "Division": "West",
+    "League": "AL"
+  },
+  {
+    "id": "12",
+    "TeamShortName": "KC",
+    "Team": "Kansas City Royals",
+    "Division": "Central",
+    "League": "AL"
+  },
+  {
+    "id": "13",
+    "TeamShortName": "LAA",
+    "Team": "Los Angeles Angels",
+    "Division": "West",
+    "League": "AL"
+  },
+  {
+    "id": "14",
+    "TeamShortName": "LAD",
+    "Team": "Los Angeles Dodgers",
+    "Division": "West",
+    "League": "NL"
+  },
+  {
+    "id": "15",
+    "TeamShortName": "MIA",
+    "Team": "Miami Marlins",
+    "Division": "East",
+    "League": "NL"
+  },
+  {
+    "id": "16",
+    "TeamShortName": "MIL",
+    "Team": "Milwaukee Brewers",
+    "Division": "Central",
+    "League": "NL"
+  },
+  {
+    "id": "17",
+    "TeamShortName": "MIN",
+    "Team": "Minnesota Twins",
+    "Division": "Central",
+    "League": "AL"
+  },
+  {
+    "id": "18",
+    "TeamShortName": "NYM",
+    "Team": "New York Mets",
+    "Division": "East",
+    "League": "NL"
+  },
+  {
+    "id": "19",
+    "TeamShortName": "NYY",
+    "Team": "New York Yankees",
+    "Division": "East",
+    "League": "AL"
+  },
+  {
+    "id": "20",
+    "TeamShortName": "OAK",
+    "Team": "Oakland Athletics",
+    "Division": "West",
+    "League": "AL"
+  },
+  {
+    "id": "21",
+    "TeamShortName": "PHI",
+    "Team": "Philadelphia Phillies",
+    "Division": "East",
+    "League": "NL"
+  },
+  {
+    "id": "22",
+    "TeamShortName": "PIT",
+    "Team": "Pittsburgh Pirates",
+    "Division": "Central",
+    "League": "NL"
+  },
+  {
+    "id": "23",
+    "TeamShortName": "SD",
+    "Team": "San Diego Padres",
+    "Division": "West",
+    "League": "NL"
+  },
+  {
+    "id": "24",
+    "TeamShortName": "SEA",
+    "Team": "San Francisco Giants",
+    "Division": "West",
+    "League": "NL"
+  },
+  {
+    "id": "25",
+    "TeamShortName": "SF",
+    "Team": "Seattle Mariners",
+    "Division": "West",
+    "League": "AL"
+  },
+  {
+    "id": "26",
+    "TeamShortName": "STL",
+    "Team": "St. Louis Cardinals",
+    "Division": "Central",
+    "League": "NL"
+  },
+  {
+    "id": "27",
+    "TeamShortName": "TB",
+    "Team": "Tampa Bay Rays",
+    "Division": "East",
+    "League": "AL"
+  },
+  {
+    "id": "28",
+    "TeamShortName": "TEX",
+    "Team": "Texas Rangers",
+    "Division": "West",
+    "League": "AL"
+  },
+  {
+    "id": "29",
+    "TeamShortName": "TOR",
+    "Team": "Toronto Blue Jays",
+    "Division": "East",
+    "League": "AL"
+  },
+  {
+    "id": "30",
+    "TeamShortName": "WAS",
+    "Team": "Washington Nationals",
+    "Division": "East",
+    "League": "NL"
+  }
+]
