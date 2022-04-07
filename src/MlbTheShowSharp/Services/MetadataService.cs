@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace MLBTheShowSharp.Services
@@ -14,11 +15,22 @@ namespace MLBTheShowSharp.Services
     internal class MetadataService
     {
         private static readonly string _databaseName = Environment.GetEnvironmentVariable(SettingNames.DatabaseName);
-        private readonly ILogger log;
+        private readonly ILogger _log;
+        private readonly HttpClient _httpClient;
 
-        public MetadataService(ILogger logger)
+        public MetadataService(ILogger logger, HttpClient httpClient)
         {
-            log = logger ?? throw new ArgumentNullException(nameof(logger));
+            _log = logger ?? throw new ArgumentNullException(nameof(logger));
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+        }
+
+        public async Task InitializeSeriesDatabaseAsync(string containerName)
+        {
+            var url = "https://mlb22.theshow.com/apis/meta_data.json";
+            var response = await _httpClient.GetAsync(url);
+            var metadata = await response.Content.ReadAsAsync<TheShowMetadata>();
+
+            InitializeDatabaseAsync(containerName, metadata.series).Wait();
         }
 
         public void InitializeLeagueDatabaseAsync(string containerName)
@@ -27,11 +39,11 @@ namespace MLBTheShowSharp.Services
             InitializeDatabaseAsync(containerName, leagueMetadata).Wait();
         }
 
-        public async Task InitializeDatabaseAsync<T>(string containerName, List<T> items) where T : IItem, new()
+        public async Task InitializeDatabaseAsync<T>(string containerName, IList<T> items) where T : IItem, new()
         {
             try
             {
-                log.LogInformation("Beginning operations to initialize Metadata");
+                _log.LogInformation("Beginning operations to initialize Metadata");
 
                 CosmosDbService db = new(_databaseName, containerName);
 
@@ -49,11 +61,11 @@ namespace MLBTheShowSharp.Services
             }
             catch (Exception e)
             {
-                log.LogError("Error: {0}", e);
+                _log.LogError("Error: {0}", e);
             }
             finally
             {
-                log.LogInformation("Work Complete.");
+                _log.LogInformation("Work Complete.");
             }
 
         }

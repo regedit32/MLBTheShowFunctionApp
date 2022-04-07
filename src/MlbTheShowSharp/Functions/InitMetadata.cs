@@ -25,10 +25,9 @@ namespace MLBTheShowSharp
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
-            //var url = "https://mlb22.theshow.com/apis/listings.json?series_id=1337&rarity=diamond";
-            //var response = await httpClient.GetAsync(url);
 
-            MetadataService metadataService = new(log);
+            MetadataService metadataService = new(log, httpClient);
+            metadataService.InitializeSeriesDatabaseAsync(ContainerNames.SeriesMetadata).Wait();
             metadataService.InitializeLeagueDatabaseAsync(ContainerNames.LeagueMetadata);
 
             return new OkObjectResult("ok");
