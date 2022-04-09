@@ -26,8 +26,8 @@ namespace MLBTheShowSharp.Services
 
         public async Task InitializeSeriesDatabaseAsync(string containerName)
         {
-            var url = "https://mlb22.theshow.com/apis/meta_data.json";
-            var response = await _httpClient.GetAsync(url);
+            var uri = new Uri(new Uri(TheShowApi.BaseURI), TheShowApi.MetadataEndpoint);
+            var response = await _httpClient.GetAsync(uri);
             var metadata = await response.Content.ReadAsAsync<TheShowMetadata>();
 
             InitializeDatabaseAsync(containerName, metadata.series).Wait();
