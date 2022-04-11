@@ -2,8 +2,10 @@
 using Microsoft.Extensions.Logging;
 using MLBTheShowSharp.Constants;
 using MLBTheShowSharp.Models;
+using MLBTheShowSharp.Utils;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -20,9 +22,8 @@ namespace MLBTheShowSharp.Services
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
-        public async Task GetCollectionAsync(Dictionary<string, string> parameters)
+        public async Task<List<Listing>> GetCollectionAsync(Dictionary<string, string> parameters)
         {
-            // 'https://mlb22.theshow.com/apis/listings.json?series_id=1337&team=nym'
             var uri = GetTheShowUri(TheShowApi.BaseURI, TheShowApi.ListingsEndpoint, parameters);
 
             var response = await _httpClient.GetAsync(uri);
@@ -33,11 +34,26 @@ namespace MLBTheShowSharp.Services
 
             if (listingsResponse.total_pages > 1)
             {
-                for (int i = 2; i <= listingsResponse.total_pages; i++)
-                {
-
-                }
+                var moreResults = await GetPaginatedResultsAsync(uri, listingsResponse.total_pages);
+                collection.AddRange(moreResults);
             }
+
+            return collection;
+        }
+
+        private async Task<List<Listing>> GetPaginatedResultsAsync(Uri uri, int total_pages)
+        {
+            List<Listing> collection = new();
+            for (int i = 2; i <= total_pages; i++)
+            {
+                var newUri = uri.AddOrUpdateQuery(new NameValueCollection() { { "page", i.ToString() } });
+                var response = await _httpClient.GetAsync(newUri);
+                var listingsResponse = await response.Content.ReadAsAsync<ListingsResponse>();
+
+                collection.AddRange(listingsResponse.listings);
+            }
+
+            return collection;
         }
 
         public static Uri GetTheShowUri(string baseUri, string endpoint, Dictionary<string, string> parameters)
