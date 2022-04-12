@@ -3,6 +3,8 @@ using MLBTheShowSharp.Models.Interfaces;
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 
 namespace MLBTheShowSharp.Services
 {
@@ -14,18 +16,21 @@ namespace MLBTheShowSharp.Services
         // The primary key for the Azure Cosmos account.
         private static readonly string PrimaryKey = Environment.GetEnvironmentVariable("PrimaryKey");
 
+        private readonly ILogger _log;
+
         // The Cosmos client instance
-        private readonly CosmosClient cosmosClient;
+        private readonly CosmosClient _cosmosClient;
 
         // The database we will create
-        private Database database;
+        private Database _database;
 
         // The container we will create.
-        private Container container;
+        private Container _container;
 
-        public CosmosDbService(string databaseId, string containerId)
+        public CosmosDbService(string databaseId, string containerId, ILogger logger)
         {
-            cosmosClient = new CosmosClient(EndpointUri, PrimaryKey, new CosmosClientOptions() { ApplicationName = "mlbTheShowApp" });
+            _log = logger ?? throw new ArgumentNullException(nameof(logger));
+            _cosmosClient = new CosmosClient(EndpointUri, PrimaryKey, new CosmosClientOptions() { ApplicationName = "mlbTheShowApp" });
             CreateDatabaseAsync(databaseId).Wait();
             CreateContainerAsync(containerId).Wait();
         }
@@ -35,8 +40,7 @@ namespace MLBTheShowSharp.Services
         /// </summary>
         internal async Task CreateDatabaseAsync(string databaseId)
         {
-            database = await this.cosmosClient.CreateDatabaseIfNotExistsAsync(databaseId);
-            Console.WriteLine("Created Database: {0}\n", this.database.Id);
+            _database = await _cosmosClient.CreateDatabaseIfNotExistsAsync(databaseId);
         }
 
         /// <summary>
@@ -44,26 +48,46 @@ namespace MLBTheShowSharp.Services
         /// </summary>
         internal async Task CreateContainerAsync(string containerId)
         {
-            this.container = await this.database.CreateContainerIfNotExistsAsync(containerId, "/partitionKey");
-            Console.WriteLine("Created Container: {0}\n", this.container.Id);
+            _container = await _database.CreateContainerIfNotExistsAsync(containerId, "/partitionKey");
+        }
+
+        public async Task AddItemsAsync<T>(IEnumerable<T> items) where T : IItem, new()
+        {
+            foreach (var item in items)
+            {
+                await AddItemAsync(item);
+            }
         }
 
         public async Task AddItemAsync<T>(T item) where T : IItem, new()
         {
             try
             {
-                ItemResponse<T> response = await container.ReadItemAsync<T>(item.Id, new PartitionKey(item.PartitionKey));
-                Console.WriteLine("Item in database with id: {0} already exists\n", response.Resource.Id);
+                ItemResponse<T> response = await _container.ReadItemAsync<T>(item.Id, new PartitionKey(item.PartitionKey));
+                _log.LogInformation($"Item in database '{_database}', with id: {response.Resource.Id} already exists.");
             }
             catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
             {
-                await container.CreateItemAsync(item, new PartitionKey(item.PartitionKey));
+                await _container.CreateItemAsync(item, new PartitionKey(item.PartitionKey));
+            }
+            catch (CosmosException de)
+            {
+                Exception baseException = de.GetBaseException();
+                _log.LogError("{0} error occurred: {1}", de.StatusCode, de);
+            }
+            catch (Exception e)
+            {
+                _log.LogError("Error: {0}", e);
+            }
+            finally
+            {
+                _log.LogInformation("Work Complete.");
             }
         }
 
         public void Dispose()
         {
-            cosmosClient.Dispose();
+            _cosmosClient.Dispose();
         }
     }
 }

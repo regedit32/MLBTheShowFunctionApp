@@ -1,5 +1,4 @@
-﻿using Microsoft.Azure.Cosmos;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using MLBTheShowSharp.Constants;
 using MLBTheShowSharp.Models;
 using MLBTheShowSharp.Models.Interfaces;
@@ -41,31 +40,10 @@ namespace MLBTheShowSharp.Services
 
         public async Task InitializeDatabaseAsync<T>(string containerName, IList<T> items) where T : IItem, new()
         {
-            try
-            {
-                _log.LogInformation("Beginning operations to initialize Metadata");
+            _log.LogInformation("Beginning operations to initialize Metadata");
 
-                CosmosDbService db = new(_databaseName, containerName);
-
-                foreach (var item in items)
-                {
-                    await db.AddItemAsync(item);
-                }
-                db.Dispose();
-            }
-            catch (CosmosException de)
-            {
-                Exception baseException = de.GetBaseException();
-                Console.WriteLine("{0} error occurred: {1}", de.StatusCode, de);
-            }
-            catch (Exception e)
-            {
-                _log.LogError("Error: {0}", e);
-            }
-            finally
-            {
-                _log.LogInformation("Work Complete.");
-            }
+            CosmosDbService db = new(_databaseName, containerName, _log);
+            await db.AddItemsAsync(items);
         }
 
         public static List<LeagueMetadata> GetLeagueMetadata()
