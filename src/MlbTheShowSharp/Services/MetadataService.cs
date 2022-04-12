@@ -52,7 +52,6 @@ namespace MLBTheShowSharp.Services
                     await db.AddItemAsync(item);
                 }
                 db.Dispose();
-
             }
             catch (CosmosException de)
             {
@@ -67,7 +66,6 @@ namespace MLBTheShowSharp.Services
             {
                 _log.LogInformation("Work Complete.");
             }
-
         }
 
         public static List<LeagueMetadata> GetLeagueMetadata()

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MLBTheShowSharp.Constants
+﻿namespace MLBTheShowSharp.Constants
 {
-    static class TheShowApi
+    internal static class TheShowApi
     {
         public const string BaseURI = "https://mlb22.theshow.com/apis/";
 

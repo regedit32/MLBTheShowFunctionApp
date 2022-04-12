@@ -43,11 +43,11 @@ namespace MLBTheShowSharp.Services
         {
             var value = new CollectionValue()
             {
-                 Name = teamData.TeamShortName,
-                 Division = teamData.Division,
-                 League = teamData.League,
-                 Buy = result.Sum(items => Convert.ToInt32(items.best_buy_price)).ToString(),
-                 Sell = result.Sum(items => Convert.ToInt32(items.best_sell_price)).ToString(),
+                Name = teamData.TeamShortName,
+                Division = teamData.Division,
+                League = teamData.League,
+                Buy = result.Sum(items => Convert.ToInt32(items.best_buy_price)).ToString(),
+                Sell = result.Sum(items => Convert.ToInt32(items.best_sell_price)).ToString(),
             };
 
             return value;

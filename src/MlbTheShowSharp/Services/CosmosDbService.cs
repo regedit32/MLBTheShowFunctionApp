@@ -8,7 +8,7 @@ namespace MLBTheShowSharp.Services
 {
     internal class CosmosDbService : IDbService
     {
-        // The Azure Cosmos DB endpoint for running this sample.
+        // The Azure Cosmos DB endpoint.
         private static readonly string EndpointUri = Environment.GetEnvironmentVariable("EndPointUri");
 
         // The primary key for the Azure Cosmos account.
@@ -40,7 +40,7 @@ namespace MLBTheShowSharp.Services
         }
 
         /// <summary>
-        /// Create the container if it does not exist. 
+        /// Create the container if it does not exist.
         /// </summary>
         internal async Task CreateContainerAsync(string containerId)
         {

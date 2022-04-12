@@ -1,6 +1,6 @@
 ﻿namespace MLBTheShowSharp.Constants
 {
-    static class SettingNames
+    internal static class SettingNames
     {
         public const string DatabaseName = "DatabaseName";
         public const string EndPointUri = "EndPointUri";

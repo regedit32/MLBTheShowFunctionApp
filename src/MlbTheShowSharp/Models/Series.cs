@@ -20,6 +20,7 @@ namespace MLBTheShowSharp.Models
             set => _id = value;
         }
 
-        public string PartitionKey { get { return Name; } }
+        public string PartitionKey
+        { get { return Name; } }
     }
 }

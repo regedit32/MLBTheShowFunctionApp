@@ -16,6 +16,7 @@ namespace MLBTheShowSharp.Models
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
 
-        public string PartitionKey { get { return TeamShortName; } }
+        public string PartitionKey
+        { get { return TeamShortName; } }
     }
 }

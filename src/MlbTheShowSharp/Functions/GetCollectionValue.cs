@@ -4,7 +4,6 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using MLBTheShowSharp.Services;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
