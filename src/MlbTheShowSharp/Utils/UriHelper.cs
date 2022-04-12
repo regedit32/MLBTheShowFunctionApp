@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.WebUtilities;
+using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Web;
 
@@ -20,6 +22,14 @@ namespace MLBTheShowSharp.Utils
             });
 
             return new Uri(url);
+        }
+
+        public static Uri GetTheShowUri(string baseUri, string endpoint, Dictionary<string, string> parameters)
+        {
+            var url = string.Format("{0}{1}", baseUri, endpoint);
+            var newUri = new Uri(QueryHelpers.AddQueryString(url, parameters));
+
+            return newUri;
         }
 
         private static void CopyProps(NameValueCollection source, NameValueCollection destination)

@@ -70,7 +70,7 @@ namespace MLBTheShowSharp.Services
 
         }
 
-        public List<LeagueMetadata> GetLeagueMetadata()
+        public static List<LeagueMetadata> GetLeagueMetadata()
         {
             return ReadJson<List<LeagueMetadata>>(@"Resources\importLeagueMetadata.json");
         }

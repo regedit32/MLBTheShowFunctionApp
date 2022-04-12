@@ -24,16 +24,12 @@ namespace MLBTheShowSharp.Functions
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            log.LogInformation("HTTP trigger function processed a request.");
 
-            var collectionService = new CollectionService(log, _httpClient);
-            // 'https://mlb22.theshow.com/apis/listings.json?series_id=1337&team=nym'
+            var httpClientService = new HttpClientService(log, _httpClient);
+            var collectionService = new CollectionService(log, httpClientService);
 
-            var query = new Dictionary<string, string>() {
-                { "series_id", "1337" },
-                { "team", "nym" }
-            };
-            var result = await collectionService.GetCollectionAsync(query);
+            var result = await collectionService.ProcessLiveSeriesValue();
             return new OkObjectResult(result);
         }
     }

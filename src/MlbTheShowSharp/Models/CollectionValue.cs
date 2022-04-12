@@ -15,6 +15,10 @@ namespace MLBTheShowSharp.Models
 
         public string Buy { get; set; }
 
-        public DateTime DateTime { get; set; }
+        public string Division { get; set; }
+
+        public string League { get; set; }
+
+        public DateTime DateTime { get; set; } = DateTime.UtcNow;
     }
 }
