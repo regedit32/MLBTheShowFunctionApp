@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace MLBTheShowSharp.Functions
 {
-    public class GetCollectionValue
+    public class CollectionValue
     {
         private readonly HttpClient _httpClient;
 
-        public GetCollectionValue(HttpClient httpClient)
+        public CollectionValue(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
 
-        [FunctionName("GetCollectionValue")]
+        [FunctionName("ProcessLiveSeriesValue")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
