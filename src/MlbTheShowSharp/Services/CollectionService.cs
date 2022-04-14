@@ -99,7 +99,7 @@ namespace MLBTheShowSharp.Services
 
         public static List<CollectionValue> GetLiveSeriesValueByLeague(List<CollectionValue> values)
         {
-            List<CollectionValue> leagueResult = new();
+            List<CollectionValue> divisionResult = new();
             var divisionGroups = values.GroupBy(x => x.League);
 
             foreach (var group in divisionGroups)
@@ -114,10 +114,10 @@ namespace MLBTheShowSharp.Services
                     Sell = group.Sum(items => int.Parse(items.Sell)).ToString(),
                 };
 
-                leagueResult.Add(value);
+                divisionResult.Add(value);
             }
 
-            return leagueResult;
+            return divisionResult;
         }
 
         public static CollectionValue CreateLiveSeriesValue(LeagueMetadata teamData, List<Listing> result)

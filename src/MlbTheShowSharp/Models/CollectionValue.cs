@@ -3,7 +3,7 @@ using System;
 
 namespace MLBTheShowSharp.Models
 {
-    internal class CollectionValue : IItem
+    internal class CollectionValue : IDbItem
     {
         public string Name { get; set; }
 

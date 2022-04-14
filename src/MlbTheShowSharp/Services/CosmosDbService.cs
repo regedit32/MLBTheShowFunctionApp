@@ -51,7 +51,7 @@ namespace MLBTheShowSharp.Services
             _container = await _database.CreateContainerIfNotExistsAsync(containerId, "/partitionKey");
         }
 
-        public async Task AddItemsAsync<T>(IEnumerable<T> items) where T : IItem, new()
+        public async Task AddItemsAsync<T>(IEnumerable<T> items) where T : IDbItem, new()
         {
             foreach (var item in items)
             {
@@ -59,7 +59,7 @@ namespace MLBTheShowSharp.Services
             }
         }
 
-        public async Task AddItemAsync<T>(T item) where T : IItem, new()
+        public async Task AddItemAsync<T>(T item) where T : IDbItem, new()
         {
             try
             {

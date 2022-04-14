@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace MLBTheShowSharp.Models
 {
-    public class LeagueMetadata : IItem
+    public class LeagueMetadata : IDbItem
     {
         public string Team { get; set; }
 
@@ -16,7 +16,6 @@ namespace MLBTheShowSharp.Models
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
 
-        public string PartitionKey
-        { get { return TeamShortName; } }
+        public string PartitionKey { get { return TeamShortName; } }
     }
 }

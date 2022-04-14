@@ -38,7 +38,7 @@ namespace MLBTheShowSharp.Services
             InitializeDatabaseAsync(containerName, leagueMetadata).Wait();
         }
 
-        public async Task InitializeDatabaseAsync<T>(string containerName, IList<T> items) where T : IItem, new()
+        public async Task InitializeDatabaseAsync<T>(string containerName, IList<T> items) where T : IDbItem, new()
         {
             _log.LogInformation("Beginning operations to initialize Metadata");
 

@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace MLBTheShowSharp.Models
 {
-    internal class Series : IItem
+    internal class Series : IDbItem
     {
         private string _id;
 
