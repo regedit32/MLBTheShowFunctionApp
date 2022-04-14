@@ -28,7 +28,21 @@ namespace MLBTheShowSharp.Functions
             var httpClientService = new HttpClientService(log, _httpClient);
             var collectionService = new CollectionService(log, httpClientService);
 
-            var result = await collectionService.ProcessLiveSeriesValue();
+            await collectionService.ProcessLiveSeriesValue();
+            return new OkObjectResult("ok");
+        }
+
+        [FunctionName("GetLiveSeriesValue")]
+        public async Task<IActionResult> Get(
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+            ILogger log)
+        {
+            log.LogInformation("HTTP trigger function processed a request.");
+
+            var httpClientService = new HttpClientService(log, _httpClient);
+            var collectionService = new CollectionService(log, httpClientService);
+
+            var result = await collectionService.GetLiveSeriesValue();
             return new OkObjectResult(result);
         }
     }

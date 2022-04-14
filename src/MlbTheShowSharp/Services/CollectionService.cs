@@ -14,6 +14,7 @@ namespace MLBTheShowSharp.Services
     {
         private readonly ILogger _log;
         private readonly HttpClientService _httpClientService;
+        private static readonly string _databaseName = Environment.GetEnvironmentVariable(SettingNames.DatabaseName);
 
         public CollectionService(ILogger logger, HttpClientService httpClientService)
         {
@@ -21,13 +22,47 @@ namespace MLBTheShowSharp.Services
             _httpClientService = httpClientService ?? throw new ArgumentNullException(nameof(httpClientService));
         }
 
-        public async Task<List<CollectionValue>> ProcessLiveSeriesValue()
+        public async Task ProcessLiveSeriesValue()
+        {
+            var values = await GetLiveSeriesValue();
+            WriteCollectionValueItemsAsync(_databaseName, ContainerNames.LiveSeriesCollection, values).Wait();
+        }
+
+        public async Task WriteCollectionValueItemsAsync(string databaseName, string containerName, IEnumerable<CollectionValue> items)
+        {
+            CosmosDbService db = new(databaseName, containerName, _log);
+            await db.AddItemsAsync(items);
+        }
+
+        public async Task<List<CollectionValue>> GetLiveSeriesValue()
+        {
+            List<CollectionValue> allValues = new();
+            var teamValues = await GetLiveSeriesValueByTeam();
+            var divisionValues = GetLiveSeriesValueByDivision(teamValues);
+            var leagueValues = GetLiveSeriesValueByLeague(divisionValues);
+
+            var total = new CollectionValue()
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = "Live Series",
+                Buy = leagueValues.Sum(items => int.Parse(items.Buy)).ToString(),
+                Sell = leagueValues.Sum(items => int.Parse(items.Sell)).ToString(),
+            };
+
+            allValues.Add(total);
+            allValues.AddRange(divisionValues);
+            allValues.AddRange(teamValues);
+            allValues.AddRange(leagueValues);
+
+            return allValues;
+        }
+
+        public async Task<List<CollectionValue>> GetLiveSeriesValueByTeam()
         {
             var teamData = MetadataService.GetLeagueMetadata();
             var collectionResult = new List<CollectionValue>();
             foreach (var team in teamData)
             {
-                // sample 'https://mlb22.theshow.com/apis/listings.json?series_id=1337&team=nym'
                 var query = new Dictionary<string, string>() {
                     { "series_id", "1337" },
                     { "team", team.TeamShortName }
@@ -39,15 +74,62 @@ namespace MLBTheShowSharp.Services
             return collectionResult;
         }
 
+        public static List<CollectionValue> GetLiveSeriesValueByDivision(List<CollectionValue> values)
+        {
+            List<CollectionValue> divisionResult = new();
+            var divisionGroups = values.GroupBy(x => x.Division);
+
+            foreach (var group in divisionGroups)
+            {
+                var value = new CollectionValue()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = group.Select(x => x.Division).First(),
+                    Division = group.Select(x => x.Division).First(),
+                    League = group.Select(x => x.League).First(),
+                    Buy = group.Sum(items => int.Parse(items.Buy)).ToString(),
+                    Sell = group.Sum(items => int.Parse(items.Sell)).ToString(),
+                };
+
+                divisionResult.Add(value);
+            }
+
+            return divisionResult;
+        }
+
+        public static List<CollectionValue> GetLiveSeriesValueByLeague(List<CollectionValue> values)
+        {
+            List<CollectionValue> leagueResult = new();
+            var divisionGroups = values.GroupBy(x => x.League);
+
+            foreach (var group in divisionGroups)
+            {
+                var value = new CollectionValue()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = group.Select(x => x.League).First(),
+                    Division = group.Select(x => x.League).First(),
+                    League = group.Select(x => x.League).First(),
+                    Buy = group.Sum(items => int.Parse(items.Buy)).ToString(),
+                    Sell = group.Sum(items => int.Parse(items.Sell)).ToString(),
+                };
+
+                leagueResult.Add(value);
+            }
+
+            return leagueResult;
+        }
+
         public static CollectionValue CreateLiveSeriesValue(LeagueMetadata teamData, List<Listing> result)
         {
             var value = new CollectionValue()
             {
+                Id = Guid.NewGuid().ToString(),
                 Name = teamData.TeamShortName,
                 Division = teamData.Division,
                 League = teamData.League,
-                Buy = result.Sum(items => Convert.ToInt32(items.best_buy_price)).ToString(),
-                Sell = result.Sum(items => Convert.ToInt32(items.best_sell_price)).ToString(),
+                Buy = result.Sum(items => items.best_buy_price).ToString(),
+                Sell = result.Sum(items => items.best_sell_price).ToString(),
             };
 
             return value;

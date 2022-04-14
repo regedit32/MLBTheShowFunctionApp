@@ -7,7 +7,7 @@ namespace MLBTheShowSharp.Models
     {
         public string Name { get; set; }
 
-        public string Id { get => Guid.NewGuid().ToString(); set => throw new NotImplementedException(); }
+        public string Id { get; set; }
 
         public string PartitionKey
         { get { return Name; } }
