@@ -19,12 +19,12 @@ namespace MLBTheShowSharp.Functions
         }
 
         [FunctionName("ProcessLiveSeriesValue")]
-        public void Run([TimerTrigger("15 5,9,15,19,23 * * *")] TimerInfo myTimer, ILogger log)
+        public void Run([TimerTrigger("15 5,9,15,19,23 * * *")] TimerInfo myTimer, ILogger log, ExecutionContext executionContext)
         {
             log.LogInformation("HTTP trigger function processed a request.");
 
             var httpClientService = new HttpClientService(log, _httpClient);
-            var collectionService = new CollectionService(log, httpClientService);
+            var collectionService = new CollectionService(log, httpClientService, executionContext);
 
             collectionService.ProcessLiveSeriesValue().Wait();
         }
@@ -32,12 +32,12 @@ namespace MLBTheShowSharp.Functions
         [FunctionName("GetLiveSeriesValue")]
         public async Task<IActionResult> Get(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
-            ILogger log)
+            ILogger log, ExecutionContext executionContext)
         {
             log.LogInformation("HTTP trigger function processed a request.");
 
             var httpClientService = new HttpClientService(log, _httpClient);
-            var collectionService = new CollectionService(log, httpClientService);
+            var collectionService = new CollectionService(log, httpClientService, executionContext);
 
             var result = await collectionService.GetLiveSeriesValue();
             return new OkObjectResult(result);

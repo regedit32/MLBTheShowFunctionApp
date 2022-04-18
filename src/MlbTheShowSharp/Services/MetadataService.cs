@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Azure.WebJobs;
+using Microsoft.Extensions.Logging;
 using MLBTheShowSharp.Constants;
 using MLBTheShowSharp.Models;
 using MLBTheShowSharp.Models.Interfaces;
@@ -15,19 +16,20 @@ namespace MLBTheShowSharp.Services
     {
         private static readonly string _databaseName = Environment.GetEnvironmentVariable(SettingNames.DatabaseName);
         private readonly ILogger _log;
-        private readonly HttpClient _httpClient;
+        private readonly HttpClientService _httpClientService;
+        private readonly string _functionDirectory;
 
-        public MetadataService(ILogger logger, HttpClient httpClient)
+        public MetadataService(ILogger logger, HttpClientService httpClientService, ExecutionContext executionContext)
         {
             _log = logger ?? throw new ArgumentNullException(nameof(logger));
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            _httpClientService = httpClientService ?? throw new ArgumentNullException(nameof(httpClientService));
+            _functionDirectory = Directory.GetParent(executionContext.FunctionDirectory).FullName;
         }
 
         public async Task InitializeSeriesDatabaseAsync(string containerName)
         {
             var uri = new Uri(new Uri(TheShowApi.BaseURI), TheShowApi.MetadataEndpoint);
-            var response = await _httpClient.GetAsync(uri);
-            var metadata = await response.Content.ReadAsAsync<TheShowMetadata>();
+            var metadata = await _httpClientService.GetResponseAsync<TheShowMetadata>(uri);
 
             InitializeDatabaseAsync(containerName, metadata.series).Wait();
         }
@@ -46,9 +48,9 @@ namespace MLBTheShowSharp.Services
             await db.AddItemsAsync(items);
         }
 
-        public static List<LeagueMetadata> GetLeagueMetadata()
+        public List<LeagueMetadata> GetLeagueMetadata()
         {
-            return ReadJson<List<LeagueMetadata>>(@"Resources\importLeagueMetadata.json");
+            return ReadJson<List<LeagueMetadata>>($"{_functionDirectory}\\Resources\\importLeagueMetadata.json");
         }
 
         public static T ReadJson<T>(string filePath)

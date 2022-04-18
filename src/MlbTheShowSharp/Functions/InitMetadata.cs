@@ -22,11 +22,12 @@ namespace MLBTheShowSharp
         [FunctionName("InitMetadata")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
-            ILogger log)
+            ILogger log, ExecutionContext executionContext)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            MetadataService metadataService = new(log, httpClient);
+            var httpClientService = new HttpClientService(log, httpClient);
+            MetadataService metadataService = new(log, httpClientService, executionContext);
             metadataService.InitializeSeriesDatabaseAsync(ContainerNames.SeriesMetadata).Wait();
             metadataService.InitializeLeagueDatabaseAsync(ContainerNames.LeagueMetadata);
 

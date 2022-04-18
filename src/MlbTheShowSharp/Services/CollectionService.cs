@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Azure.WebJobs;
+using Microsoft.Extensions.Logging;
 using MLBTheShowSharp.Constants;
 using MLBTheShowSharp.Models;
 using MLBTheShowSharp.Utils;
@@ -14,12 +15,14 @@ namespace MLBTheShowSharp.Services
     {
         private readonly ILogger _log;
         private readonly HttpClientService _httpClientService;
+        private readonly ExecutionContext _context;
         private static readonly string _databaseName = Environment.GetEnvironmentVariable(SettingNames.DatabaseName);
 
-        public CollectionService(ILogger logger, HttpClientService httpClientService)
+        public CollectionService(ILogger logger, HttpClientService httpClientService, ExecutionContext executionContext)
         {
             _log = logger ?? throw new ArgumentNullException(nameof(logger));
             _httpClientService = httpClientService ?? throw new ArgumentNullException(nameof(httpClientService));
+            _context = executionContext ?? throw new ArgumentNullException(nameof(executionContext));
         }
 
         public async Task ProcessLiveSeriesValue()
@@ -59,7 +62,8 @@ namespace MLBTheShowSharp.Services
 
         public async Task<List<CollectionValue>> GetLiveSeriesValueByTeam()
         {
-            var teamData = MetadataService.GetLeagueMetadata();
+            var metadataService = new MetadataService(_log, _httpClientService, _context);
+            var teamData = metadataService.GetLeagueMetadata();
             var collectionResult = new List<CollectionValue>();
             foreach (var team in teamData)
             {

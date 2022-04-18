@@ -11,8 +11,8 @@ namespace MLBTheShowSharp.Utils
         /// <summary>
         /// Updates the query string parameters to a url
         /// </summary>
-        /// <param name="uri">The uri to update parameters</param> 
-        /// <param name="query">The parameters to update to the url</param> 
+        /// <param name="uri">The uri to update parameters</param>
+        /// <param name="query">The parameters to update to the url</param>
         /// <returns>The url updated with the specified query</returns>
         public static Uri AddOrUpdateQuery(this Uri uri, NameValueCollection query)
         {
